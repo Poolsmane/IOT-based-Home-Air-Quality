@@ -1,0 +1,44 @@
+#include "DHT.h"
+
+#define DHTPIN 4     
+#define DHTTYPE DHT11   
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const int gasPin = 34; 
+const int ledPin = 2; // Red LED pin
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  delay(2000);
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  int gas = analogRead(gasPin);
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\t");  
+  
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.println(" *C");
+
+  Serial.print("Gas: ");
+  Serial.println(gas);
+
+  // Check if gas level is high
+  if(gas > 600){ 
+    digitalWrite(ledPin, HIGH); // Turn on red LED
+  }
+  else{
+    digitalWrite(ledPin, LOW); // Turn off red LED
+  }
+  
+}

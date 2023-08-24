@@ -1,0 +1,52 @@
+#include <WiFi.h>
+#include <DHT.h>
+
+const char* ssid = "yourNetwork";
+const char* password = "yourPassword";
+
+#define DHTPIN 4  
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+void connectToWiFi(){
+
+  String network = ssid;
+  String pass = password;
+  
+  Serial.print("Connecting to ");
+  Serial.println(network);
+  WiFi.begin(network, pass);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println("");
+  Serial.println("WiFi connected");
+}
+
+void setup() {
+
+  Serial.begin(115200);
+  dht.begin();
+  
+  connectToWiFi();
+
+}
+
+void loop() {
+
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.print(" %\t");
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+
+  delay(2000);
+
+}
